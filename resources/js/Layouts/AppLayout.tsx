@@ -94,12 +94,6 @@ const adminNavItems: NavItem[] = [
         pattern: 'admin.sidang*',
     },
     {
-        label: 'Pengaturan',
-        href: '/admin/setting',
-        icon: Cog,
-        pattern: 'admin.setting*',
-    },
-    {
         label: 'Data Sidang',
         href: '/sidang',
         icon: Calendar,
@@ -116,6 +110,12 @@ const adminNavItems: NavItem[] = [
         href: '/template',
         icon: Settings,
         pattern: 'template*',
+    },
+    {
+        label: 'Pengaturan',
+        href: '/admin/setting',
+        icon: Cog,
+        pattern: 'admin.setting*',
     },
 ];
 
