@@ -41,6 +41,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('sidang', UserSidangController::class);
+    Route::get('/sidang/export', [UserSidangController::class, 'export'])
+        ->name('sidang.export');
 
     Route::post('/sidang/{sidang}/jadwal', [JadwalSidangController::class, 'store'])
         ->name('sidang.jadwal.store');
@@ -126,6 +128,8 @@ Route::middleware(['auth', 'admin'])
 
         Route::get('/sidang', [AdminSidangController::class, 'index'])
             ->name('sidang.index');
+        Route::get('/sidang/export', [AdminSidangController::class, 'export'])
+            ->name('sidang.export');
         Route::get('/sidang/bulk', [AdminSidangController::class, 'bulkCreate'])
             ->name('sidang.bulk.create');
         Route::post('/sidang/bulk', [AdminSidangController::class, 'bulkStore'])

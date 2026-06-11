@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Plus, Search, Pencil, Eye, Trash2, CalendarCheck, CalendarX, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Plus, Search, Pencil, Eye, Trash2, CalendarCheck, CalendarX, ArrowUpDown, ArrowUp, ArrowDown, Download } from 'lucide-react';
 import { FormEventHandler } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -99,10 +99,23 @@ export default function SidangIndex({ sidang, filters, tahunAkademikOptions, pro
             <div className="space-y-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <h1 className="text-2xl font-bold">Data Sidang</h1>
-                    <Button onClick={() => router.visit('/sidang/create')}>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Tambah Sidang
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => {
+                            const params = new URLSearchParams();
+                            if (filters.search) params.set('search', filters.search);
+                            if (filters.tahun_akademik) params.set('tahun_akademik', filters.tahun_akademik);
+                            if (filters.prodi) params.set('prodi', filters.prodi);
+                            if (filters.sort) params.set('sort', filters.sort);
+                            if (filters.direction) params.set('direction', filters.direction);
+                            window.location.href = route('sidang.export') + (params.toString() ? '?' + params.toString() : '');
+                        }}>
+                            <Download className="mr-2 h-4 w-4" /> Export Excel
+                        </Button>
+                        <Button onClick={() => router.visit('/sidang/create')}>
+                            <Plus className="mr-2 h-4 w-4" />
+                            Tambah Sidang
+                        </Button>
+                    </div>
                 </div>
 
                 <form onSubmit={handleSearch} className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">

@@ -86,7 +86,7 @@
     </div>
 
     <div class="signature">
-        <p>{{ $ttdKota ?? config('app.universitas_kota', 'Kota') }}, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
+        <p>{{ $ttdKota ?? config('app.universitas_kota', 'Kota') }}, {{ formatTanggalIndonesia(\Carbon\Carbon::now(), 'd F Y') }}</p>
         @if($ttdJabatan ?? null)
         <p>{{ $ttdJabatan }}</p>
         @endif

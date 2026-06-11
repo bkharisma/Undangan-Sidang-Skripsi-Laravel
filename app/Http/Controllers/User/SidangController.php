@@ -16,6 +16,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SidangController extends Controller
 {
@@ -86,6 +89,129 @@ class SidangController extends Controller
             'filters' => $request->only(['search', 'tahun_akademik', 'sort', 'direction', 'prodi', 'per_page']),
             'tahunAkademikOptions' => Sidang::tahunAkademikOptions(),
             'prodiOptions' => $prodiOptions,
+        ]);
+    }
+
+    public function export(Request $request): StreamedResponse
+    {
+        $query = Sidang::where('user_id', $request->user()->id)
+            ->with([
+                'mahasiswa',
+                'penguji1',
+                'penguji2',
+                'pimpinanSidang',
+                'jadwalSidang.ruangan',
+                'jadwalSidang.jam',
+                'jadwalSidang.pic',
+            ]);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul_skripsi', 'like', "%{$search}%")
+                    ->orWhereHas('mahasiswa', function ($q) use ($search) {
+                        $q->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nim', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($request->filled('tahun_akademik')) {
+            $query->where('tahun_akademik', $request->tahun_akademik);
+        }
+
+        if ($request->filled('prodi')) {
+            $query->whereHas('mahasiswa', function ($q) use ($request) {
+                $q->where('program_studi', $request->prodi);
+            });
+        }
+
+        $sort = $request->get('sort', 'created_at');
+        $direction = $request->get('direction', 'desc');
+
+        if ($sort === 'nim') {
+            $query->join('mahasiswa', 'sidang.mahasiswa_id', '=', 'mahasiswa.id')
+                ->select('sidang.*')
+                ->orderBy('mahasiswa.nim', $direction);
+        } elseif ($sort === 'nama') {
+            $query->join('mahasiswa', 'sidang.mahasiswa_id', '=', 'mahasiswa.id')
+                ->select('sidang.*')
+                ->orderBy('mahasiswa.nama', $direction);
+        } elseif ($sort === 'tahun_akademik') {
+            $query->orderBy('sidang.tahun_akademik', $direction);
+        } elseif ($sort === 'tanggal_ujian') {
+            $query->orderBy('sidang.tanggal_ujian', $direction);
+        } else {
+            $query->latest();
+        }
+
+        $sidangList = $query->get();
+
+        $spreadsheet = new Spreadsheet;
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $headers = [
+            'No',
+            'NIM',
+            'Nama Mahasiswa',
+            'Program Studi',
+            'Judul Skripsi',
+            'Tahun Akademik',
+            'Tanggal Ujian',
+            'Penguji 1',
+            'Penguji 2',
+            'Pimpinan Sidang',
+            'Ruangan',
+            'Jam',
+            'PIC',
+        ];
+
+        $col = 'A';
+        foreach ($headers as $header) {
+            $sheet->setCellValue($col . '1', $header);
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+            $col++;
+        }
+
+        $sheet->getColumnDimension('A')->setWidth(5);
+        $sheet->getColumnDimension('B')->setWidth(18);
+        $sheet->getColumnDimension('C')->setWidth(25);
+        $sheet->getColumnDimension('D')->setWidth(25);
+        $sheet->getColumnDimension('E')->setWidth(50);
+        $sheet->getColumnDimension('F')->setWidth(16);
+        $sheet->getColumnDimension('G')->setWidth(16);
+        $sheet->getColumnDimension('H')->setWidth(22);
+        $sheet->getColumnDimension('I')->setWidth(22);
+        $sheet->getColumnDimension('J')->setWidth(22);
+        $sheet->getColumnDimension('K')->setWidth(18);
+        $sheet->getColumnDimension('L')->setWidth(18);
+        $sheet->getColumnDimension('M')->setWidth(18);
+
+        foreach ($sidangList as $i => $s) {
+            $row = $i + 2;
+            $jadwal = $s->jadwalSidang;
+            $sheet->setCellValue('A' . $row, $i + 1);
+            $sheet->setCellValue('B' . $row, $s->mahasiswa?->nim ?? '-');
+            $sheet->setCellValue('C' . $row, $s->mahasiswa?->nama ?? '-');
+            $sheet->setCellValue('D' . $row, $s->mahasiswa?->program_studi ?? '-');
+            $sheet->setCellValue('E' . $row, $s->judul_skripsi ?? '-');
+            $sheet->setCellValue('F' . $row, $s->tahun_akademik ?? '-');
+            $sheet->setCellValue('G' . $row, $s->tanggal_ujian ? \Carbon\Carbon::parse($s->tanggal_ujian)->format('d-m-Y') : '-');
+            $sheet->setCellValue('H' . $row, $s->penguji1?->nama ?? '-');
+            $sheet->setCellValue('I' . $row, $s->penguji2?->nama ?? '-');
+            $sheet->setCellValue('J' . $row, $s->pimpinanSidang?->nama ?? '-');
+            $sheet->setCellValue('K' . $row, $jadwal?->ruangan?->nama ?? '-');
+            $sheet->setCellValue('L' . $row, $jadwal?->jam ? $jadwal->jam->jam_mulai . ' - ' . $jadwal->jam->jam_selesai : '-');
+            $sheet->setCellValue('M' . $row, $jadwal?->pic?->nama ?? '-');
+        }
+
+        $filename = 'data_sidang_' . now()->format('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
     }
 

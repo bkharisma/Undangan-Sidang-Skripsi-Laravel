@@ -155,7 +155,7 @@
             @forelse($sidangList as $i => $s)
             <tr>
                 <td class="no">{{ $i + 1 }}</td>
-                <td>{{ $s['hari_tanggal'] ? \Carbon\Carbon::parse($s['hari_tanggal'])->translatedFormat('l, d F Y') : '-' }}</td>
+                <td>{{ formatTanggalIndonesia($s['hari_tanggal'], 'l, d F Y') }}</td>
                 <td>{{ $s['waktu'] }}</td>
                 <td>{{ $s['ruangan'] }}</td>
                 <td>{{ $s['nama_mahasiswa'] }}</td>
@@ -176,7 +176,7 @@
     </div>
 
     <div class="signature">
-        <p>{{ $ttdKota ?? config('app.universitas_kota', 'Kota') }}, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
+        <p>{{ $ttdKota ?? config('app.universitas_kota', 'Kota') }}, {{ formatTanggalIndonesia(\Carbon\Carbon::now(), 'd F Y') }}</p>
         @if($ttdJabatan ?? null)
         <p>{{ $ttdJabatan }}</p>
         @endif

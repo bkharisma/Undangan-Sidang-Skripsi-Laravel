@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Eye, Search, Upload, ArrowUpDown, ArrowUp, ArrowDown, Pencil, Loader2 } from 'lucide-react';
+import { Eye, Search, Upload, ArrowUpDown, ArrowUp, ArrowDown, Pencil, Loader2, Download } from 'lucide-react';
 import Pagination from '@/Components/Pagination';
 import { FormEventHandler, useState } from 'react';
 
@@ -108,9 +108,22 @@ export default function Index({ sidang, filters, tahunAkademikOptions, prodiOpti
             <div className="space-y-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <h1 className="text-2xl font-bold">Semua Sidang</h1>
-                    <Button onClick={() => router.visit(route('admin.sidang.bulk.create'))}>
-                        <Upload className="mr-2 h-4 w-4" /> Tambah Bulk
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => {
+                            const params = new URLSearchParams();
+                            if (filters?.search) params.set('search', filters.search);
+                            if (filters?.tahun_akademik) params.set('tahun_akademik', filters.tahun_akademik);
+                            if (filters?.prodi) params.set('prodi', filters.prodi);
+                            if (filters?.sort) params.set('sort', filters.sort);
+                            if (filters?.direction) params.set('direction', filters.direction);
+                            window.location.href = route('admin.sidang.export') + (params.toString() ? '?' + params.toString() : '');
+                        }}>
+                            <Download className="mr-2 h-4 w-4" /> Export Excel
+                        </Button>
+                        <Button onClick={() => router.visit(route('admin.sidang.bulk.create'))}>
+                            <Upload className="mr-2 h-4 w-4" /> Tambah Bulk
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
