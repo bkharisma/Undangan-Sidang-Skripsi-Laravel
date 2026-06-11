@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\MahasiswaController;
 use App\Http\Controllers\Admin\PicController;
 use App\Http\Controllers\Admin\ProgramStudiController;
 use App\Http\Controllers\Admin\RuanganController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SidangController as AdminSidangController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
@@ -134,6 +135,11 @@ Route::middleware(['auth', 'admin'])
             ->name('sidang.show');
         Route::put('/sidang/{sidang}/jadwal', [AdminSidangController::class, 'updateJadwal'])
             ->name('sidang.jadwal.update');
+
+        Route::get('/setting', [SettingController::class, 'edit'])
+            ->name('setting.edit');
+        Route::put('/setting', [SettingController::class, 'update'])
+            ->name('setting.update');
     });
 
 require __DIR__.'/auth.php';

@@ -118,12 +118,21 @@ export interface DosenSchedule {
     prodi: string;
 }
 
+export interface Setting {
+    app_logo_url: string | null;
+    app_name: string | null;
+    app_deskripsi: string | null;
+    favicon_url: string | null;
+    tahun_ajaran_aktif: string | null;
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
     auth: {
         user: User;
     };
+    setting: Setting | null;
     flash?: {
         success?: string;
         error?: string;

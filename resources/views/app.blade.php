@@ -4,7 +4,17 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        @php
+            $setting = \App\Models\Setting::getAktif();
+            $appName = $setting?->app_name ?: config('app.name', 'Laravel');
+            $favicon = $setting?->favicon_url;
+        @endphp
+
+        @if($favicon)
+            <link rel="icon" href="{{ $favicon }}" type="image/x-icon">
+        @endif
+
+        <title inertia>{{ $appName }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

@@ -16,6 +16,7 @@ import {
     Clock,
     Building2,
     Settings,
+    Cog,
 } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import FlashMessages from '@/Components/FlashMessages';
+import type { Setting } from '@/types';
 
 interface NavItem {
     label: string;
@@ -92,6 +94,12 @@ const adminNavItems: NavItem[] = [
         pattern: 'admin.sidang*',
     },
     {
+        label: 'Pengaturan',
+        href: '/admin/setting',
+        icon: Cog,
+        pattern: 'admin.setting*',
+    },
+    {
         label: 'Data Sidang',
         href: '/sidang',
         icon: Calendar,
@@ -146,12 +154,15 @@ function isActive(pattern: string | RegExp): boolean {
 }
 
 export default function AppLayout({ children }: PropsWithChildren) {
-    const { auth } = usePage().props as any;
+    const { auth, setting } = usePage().props as any;
     const user = auth.user;
     const isAdmin = user.role === 'admin';
     const navItems = isAdmin ? adminNavItems : userNavItems;
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+
+    const appName = (setting as Setting)?.app_name || 'Undangan Sidang';
+    const appLogoUrl = (setting as Setting)?.app_logo_url;
 
     return (
         <div className="flex h-screen overflow-hidden bg-background">
@@ -173,14 +184,22 @@ export default function AppLayout({ children }: PropsWithChildren) {
             >
                 <div className="flex h-16 items-center justify-between border-b px-4">
                     {!collapsed && (
-                        <Link href={isAdmin ? '/admin/dashboard' : '/dashboard'} className="flex items-center gap-2">
-                            <FileText className="h-6 w-6 text-primary" />
-                            <span className="text-lg font-bold">Undangan Sidang</span>
+                        <Link href={isAdmin ? '/admin/dashboard' : '/dashboard'} className="flex items-center gap-2 min-w-0">
+                            {appLogoUrl ? (
+                                <img src={appLogoUrl} alt={appName} className="h-8 w-auto object-contain shrink-0" />
+                            ) : (
+                                <FileText className="h-6 w-6 text-primary shrink-0" />
+                            )}
+                            <span className="text-lg font-bold truncate">{appName}</span>
                         </Link>
                     )}
                     {collapsed && (
                         <Link href={isAdmin ? '/admin/dashboard' : '/dashboard'} className="mx-auto">
-                            <FileText className="h-6 w-6 text-primary" />
+                            {appLogoUrl ? (
+                                <img src={appLogoUrl} alt={appName} className="h-6 w-auto object-contain" />
+                            ) : (
+                                <FileText className="h-6 w-6 text-primary" />
+                            )}
                         </Link>
                     )}
                     <Button

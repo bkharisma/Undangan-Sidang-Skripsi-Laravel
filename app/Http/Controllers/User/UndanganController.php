@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUndanganRequest;
 use App\Http\Requests\UpdateUndanganRequest;
 use App\Models\Dosen;
+use App\Models\Setting;
 use App\Models\Sidang;
 use App\Models\Template;
 use App\Models\Undangan;
@@ -57,11 +58,14 @@ class UndanganController extends Controller
 
         $dosen = Dosen::findOrFail($dosenId);
 
+        $tahunAktif = Setting::tahunAjaranAktif();
+
         $sidangList = Sidang::where(function ($q) use ($dosenId) {
             $q->where('penguji1_id', $dosenId)
                 ->orWhere('penguji2_id', $dosenId)
                 ->orWhere('pimpinan_sidang_id', $dosenId);
         })
+            ->when($tahunAktif, fn ($q) => $q->where('tahun_akademik', $tahunAktif))
             ->with(['jadwalSidang.ruangan', 'jadwalSidang.jam', 'mahasiswa'])
             ->get();
 
@@ -113,7 +117,9 @@ class UndanganController extends Controller
             $q->where('penguji1_id', $dosenId)
                 ->orWhere('penguji2_id', $dosenId)
                 ->orWhere('pimpinan_sidang_id', $dosenId);
-        })->get();
+        })
+            ->when(Setting::tahunAjaranAktif(), fn ($q, $tahun) => $q->where('tahun_akademik', $tahun))
+            ->get();
 
         if ($sidangList->isEmpty()) {
             return redirect()->route('undangan.index')

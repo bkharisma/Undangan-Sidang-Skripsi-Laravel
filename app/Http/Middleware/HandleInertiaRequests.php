@@ -29,11 +29,20 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $setting = \App\Models\Setting::getAktif();
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
+            'setting' => $setting ? [
+                'app_logo_url' => $setting->app_logo_url,
+                'app_name' => $setting->app_name,
+                'app_deskripsi' => $setting->app_deskripsi,
+                'favicon_url' => $setting->favicon_url,
+                'tahun_ajaran_aktif' => $setting->tahun_ajaran_aktif,
+            ] : null,
         ];
     }
 }
