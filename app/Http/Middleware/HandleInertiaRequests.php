@@ -30,6 +30,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $setting = \App\Models\Setting::getAktif();
+        $tahunAjaranAktif = \App\Models\TahunAkademik::tahunAjaranAktif();
 
         return [
             ...parent::share($request),
@@ -41,7 +42,9 @@ class HandleInertiaRequests extends Middleware
                 'app_name' => $setting->app_name,
                 'app_deskripsi' => $setting->app_deskripsi,
                 'favicon_url' => $setting->favicon_url,
-                'tahun_ajaran_aktif' => $setting->tahun_ajaran_aktif,
+            ] : null,
+            'tahunAjaranAktif' => $tahunAjaranAktif ? [
+                'tahun' => $tahunAjaranAktif,
             ] : null,
         ];
     }

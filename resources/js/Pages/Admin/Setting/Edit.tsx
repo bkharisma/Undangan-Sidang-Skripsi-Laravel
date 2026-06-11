@@ -4,13 +4,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 import { Save } from 'lucide-react';
@@ -23,26 +16,18 @@ interface SettingData {
     app_deskripsi: string | null;
     favicon: string | null;
     favicon_url: string | null;
-    tahun_ajaran_aktif: string | null;
-}
-
-interface TahunAkademikOption {
-    value: string;
-    label: string;
 }
 
 interface Props {
     setting: SettingData;
-    tahunAkademikOptions: TahunAkademikOption[];
 }
 
-export default function SettingEdit({ setting, tahunAkademikOptions }: Props) {
+export default function SettingEdit({ setting }: Props) {
     const { data, setData, put, errors, processing } = useForm({
         app_logo: null as File | null,
         app_name: setting.app_name ?? '',
         app_deskripsi: setting.app_deskripsi ?? '',
         favicon: null as File | null,
-        tahun_ajaran_aktif: setting.tahun_ajaran_aktif ?? '',
     });
 
     const submit: FormEventHandler = (e) => {
@@ -58,7 +43,7 @@ export default function SettingEdit({ setting, tahunAkademikOptions }: Props) {
                 <div>
                     <h1 className="text-2xl font-bold">Pengaturan Aplikasi</h1>
                     <p className="text-sm text-muted-foreground">
-                        Atur logo, nama, deskripsi, favicon, dan tahun ajaran aktif aplikasi.
+                        Atur logo, nama, deskripsi, dan favicon aplikasi.
                     </p>
                 </div>
 
@@ -160,31 +145,6 @@ export default function SettingEdit({ setting, tahunAkademikOptions }: Props) {
                                 />
                                 {errors.favicon && (
                                     <p className="text-sm text-destructive">{errors.favicon}</p>
-                                )}
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="tahun_ajaran_aktif">Tahun Ajaran Aktif</Label>
-                                <p className="text-xs text-muted-foreground">
-                                    Data sidang dari tahun ajaran ini yang akan dicetak di PDF undangan.
-                                </p>
-                                <Select
-                                    value={data.tahun_ajaran_aktif}
-                                    onValueChange={(value) => setData('tahun_ajaran_aktif', value ?? '')}
-                                >
-                                    <SelectTrigger id="tahun_ajaran_aktif" className="w-full">
-                                        <SelectValue placeholder="Pilih tahun ajaran aktif..." />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {tahunAkademikOptions.map((opt) => (
-                                            <SelectItem key={opt.value} value={opt.value}>
-                                                {opt.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {errors.tahun_ajaran_aktif && (
-                                    <p className="text-sm text-destructive">{errors.tahun_ajaran_aktif}</p>
                                 )}
                             </div>
 

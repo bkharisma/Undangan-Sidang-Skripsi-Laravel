@@ -75,6 +75,7 @@ export default function Index({ ruangan, filters }: PageProps<Props>) {
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead className="w-16">ID</TableHead>
                                 <TableHead>Nama</TableHead>
                                 <TableHead className="text-right">Aksi</TableHead>
                             </TableRow>
@@ -89,6 +90,7 @@ export default function Index({ ruangan, filters }: PageProps<Props>) {
                             ) : (
                                 ruangan.data.map((r) => (
                                     <TableRow key={r.id}>
+                                        <TableCell className="text-muted-foreground text-xs">{r.id}</TableCell>
                                         <TableCell className="font-medium">{r.nama}</TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">

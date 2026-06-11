@@ -14,7 +14,6 @@ class Setting extends Model
         'app_name',
         'app_deskripsi',
         'favicon',
-        'tahun_ajaran_aktif',
     ];
 
     private static ?self $cachedInstance = null;

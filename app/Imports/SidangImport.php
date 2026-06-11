@@ -3,7 +3,10 @@
 namespace App\Imports;
 
 use App\Models\Dosen;
+use App\Models\Jam;
 use App\Models\Mahasiswa;
+use App\Models\Pic;
+use App\Models\Ruangan;
 use App\Models\Sidang;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -33,6 +36,9 @@ class SidangImport
             $inisialPimpinan = trim((string) ($row[4] ?? ''));
             $tanggalUjian = trim((string) ($row[5] ?? ''));
             $tahunAkademik = trim((string) ($row[6] ?? ''));
+            $ruanganId = trim((string) ($row[7] ?? ''));
+            $jamId = trim((string) ($row[8] ?? ''));
+            $picId = trim((string) ($row[9] ?? ''));
 
             $rowContent = trim(implode('', array_map(fn ($c) => (string) ($c ?? ''), $row)));
             if ($rowContent === '') {
@@ -59,6 +65,21 @@ class SidangImport
             $pimpinan = Dosen::where('inisial', $inisialPimpinan)->first();
             if (! $pimpinan) {
                 $rowErrors[] = "Inisial Pimpinan Sidang '{$inisialPimpinan}' tidak ditemukan.";
+            }
+
+            $ruangan = Ruangan::find($ruanganId);
+            if ($ruanganId !== '' && ! $ruangan) {
+                $rowErrors[] = "Ruangan ID '{$ruanganId}' tidak ditemukan.";
+            }
+
+            $jam = Jam::find($jamId);
+            if ($jamId !== '' && ! $jam) {
+                $rowErrors[] = "Jam ID '{$jamId}' tidak ditemukan.";
+            }
+
+            $pic = Pic::find($picId);
+            if ($picId !== '' && ! $pic) {
+                $rowErrors[] = "PIC ID '{$picId}' tidak ditemukan.";
             }
 
             if ($nim === '') {
@@ -106,6 +127,9 @@ class SidangImport
                 'inisial_pimpinan' => $inisialPimpinan,
                 'tanggal_ujian' => $tanggalUjian,
                 'tahun_akademik' => $tahunAkademik,
+                'ruangan_id' => $ruanganId,
+                'jam_id' => $jamId,
+                'pic_id' => $picId,
             ];
 
             if (! empty($rowErrors)) {
@@ -115,7 +139,7 @@ class SidangImport
                     'messages' => $rowErrors,
                 ];
             } else {
-                Sidang::create([
+                $sidang = Sidang::create([
                     'user_id' => $this->userId,
                     'mahasiswa_id' => $mahasiswa->id,
                     'judul_skripsi' => $judulSkripsi,
@@ -125,6 +149,16 @@ class SidangImport
                     'tanggal_ujian' => $tanggalUjian,
                     'tahun_akademik' => $tahunAkademik,
                 ]);
+
+                if ($ruangan && $jam && $pic) {
+                    $sidang->jadwalSidang()->create([
+                        'tanggal' => $tanggalUjian,
+                        'ruangan_id' => $ruangan->id,
+                        'jam_id' => $jam->id,
+                        'pic_id' => $pic->id,
+                    ]);
+                }
+
                 $this->validCount++;
             }
         }

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ProgramStudiController;
 use App\Http\Controllers\Admin\RuanganController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SidangController as AdminSidangController;
+use App\Http\Controllers\Admin\TahunAkademikController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
@@ -140,6 +141,11 @@ Route::middleware(['auth', 'admin'])
             ->name('setting.edit');
         Route::put('/setting', [SettingController::class, 'update'])
             ->name('setting.update');
+
+        Route::resource('tahun-akademik', TahunAkademikController::class)
+            ->except(['show']);
+        Route::patch('/tahun-akademik/{tahunAkademik}/toggle-active', [TahunAkademikController::class, 'toggleActive'])
+            ->name('tahun-akademik.toggle-active');
     });
 
 require __DIR__.'/auth.php';

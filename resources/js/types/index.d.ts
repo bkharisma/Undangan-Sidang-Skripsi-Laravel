@@ -123,7 +123,6 @@ export interface Setting {
     app_name: string | null;
     app_deskripsi: string | null;
     favicon_url: string | null;
-    tahun_ajaran_aktif: string | null;
 }
 
 export type PageProps<
@@ -133,6 +132,7 @@ export type PageProps<
         user: User;
     };
     setting: Setting | null;
+    tahunAjaranAktif: { tahun: string } | null;
     flash?: {
         success?: string;
         error?: string;

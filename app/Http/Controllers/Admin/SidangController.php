@@ -170,8 +170,11 @@ class SidangController extends Controller
         $sheet->setCellValue('E1', 'Inisial Pimpinan Sidang');
         $sheet->setCellValue('F1', 'Tanggal Ujian');
         $sheet->setCellValue('G1', 'Tahun Akademik');
+        $sheet->setCellValue('H1', 'Ruangan ID');
+        $sheet->setCellValue('I1', 'Jam ID');
+        $sheet->setCellValue('J1', 'PIC ID');
 
-        $sheet->getStyle('A1:G1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:J1')->getFont()->setBold(true);
         $sheet->getColumnDimension('A')->setWidth(20);
         $sheet->getColumnDimension('B')->setWidth(50);
         $sheet->getColumnDimension('C')->setWidth(22);
@@ -179,6 +182,9 @@ class SidangController extends Controller
         $sheet->getColumnDimension('E')->setWidth(25);
         $sheet->getColumnDimension('F')->setWidth(18);
         $sheet->getColumnDimension('G')->setWidth(18);
+        $sheet->getColumnDimension('H')->setWidth(15);
+        $sheet->getColumnDimension('I')->setWidth(12);
+        $sheet->getColumnDimension('J')->setWidth(12);
 
         $sheet->setCellValue('A2', '1234567890');
         $sheet->setCellValue('B2', 'Judul Contoh Skripsi');
@@ -187,6 +193,9 @@ class SidangController extends Controller
         $sheet->setCellValue('E2', 'IJ');
         $sheet->setCellValue('F2', '2025-06-15');
         $sheet->setCellValue('G2', '20251');
+        $sheet->setCellValue('H2', '1');
+        $sheet->setCellValue('I2', '1');
+        $sheet->setCellValue('J2', '1');
 
         return response()->streamDownload(function () use ($spreadsheet) {
             $writer = new Xlsx($spreadsheet);

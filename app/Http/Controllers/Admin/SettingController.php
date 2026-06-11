@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateSettingRequest;
 use App\Models\Setting;
-use App\Models\Sidang;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -19,14 +18,13 @@ class SettingController extends Controller
 
         return Inertia::render('Admin/Setting/Edit', [
             'setting' => $setting,
-            'tahunAkademikOptions' => Sidang::tahunAkademikOptions(),
         ]);
     }
 
     public function update(UpdateSettingRequest $request): RedirectResponse
     {
         $setting = Setting::firstOrCreate([]);
-        $data = $request->only(['app_name', 'app_deskripsi', 'tahun_ajaran_aktif']);
+        $data = $request->only(['app_name', 'app_deskripsi']);
 
         if ($request->hasFile('app_logo')) {
             if ($setting->app_logo) {

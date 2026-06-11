@@ -9,6 +9,7 @@ class JamImport
 {
     private array $errors = [];
     private int $validCount = 0;
+    private array $validIds = [];
 
     public function __construct(private readonly string $filePath) {}
 
@@ -49,7 +50,8 @@ class JamImport
                     'messages' => $validator->errors()->all(),
                 ];
             } else {
-                Jam::create($validator->validated());
+                $jam = Jam::create($validator->validated());
+                $this->validIds[] = $jam->id;
                 $this->validCount++;
             }
         }
@@ -68,5 +70,10 @@ class JamImport
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    public function getValidIds(): array
+    {
+        return $this->validIds;
     }
 }

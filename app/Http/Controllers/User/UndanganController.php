@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUndanganRequest;
 use App\Http\Requests\UpdateUndanganRequest;
 use App\Models\Dosen;
-use App\Models\Setting;
+use App\Models\TahunAkademik;
 use App\Models\Sidang;
 use App\Models\Template;
 use App\Models\Undangan;
@@ -58,7 +58,7 @@ class UndanganController extends Controller
 
         $dosen = Dosen::findOrFail($dosenId);
 
-        $tahunAktif = Setting::tahunAjaranAktif();
+        $tahunAktif = TahunAkademik::tahunAjaranAktif();
 
         $sidangList = Sidang::where(function ($q) use ($dosenId) {
             $q->where('penguji1_id', $dosenId)
@@ -118,7 +118,7 @@ class UndanganController extends Controller
                 ->orWhere('penguji2_id', $dosenId)
                 ->orWhere('pimpinan_sidang_id', $dosenId);
         })
-            ->when(Setting::tahunAjaranAktif(), fn ($q, $tahun) => $q->where('tahun_akademik', $tahun))
+            ->when(TahunAkademik::tahunAjaranAktif(), fn ($q, $tahun) => $q->where('tahun_akademik', $tahun))
             ->get();
 
         if ($sidangList->isEmpty()) {

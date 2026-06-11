@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Setting;
+use App\Models\TahunAkademik;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -32,7 +32,7 @@ class Undangan extends Model
     {
         return Attribute::make(
             get: function () {
-                $tahunAktif = Setting::tahunAjaranAktif();
+                $tahunAktif = TahunAkademik::tahunAjaranAktif();
 
                 return Sidang::where(function ($q) {
                     $q->where('penguji1_id', $this->dosen_id)

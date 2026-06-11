@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\TahunAkademik;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -53,21 +54,12 @@ class Sidang extends Model
 
     public static function tahunAkademikOptions(): array
     {
-        $currentYear = (int) date('Y');
-        $options = [];
-
-        for ($year = $currentYear - 5; $year <= $currentYear + 1; $year++) {
-            $nextYear = $year + 1;
-            $options[] = [
-                'value' => $year . '1',
-                'label' => "{$year}/{$nextYear} - Ganjil",
-            ];
-            $options[] = [
-                'value' => $year . '2',
-                'label' => "{$year}/{$nextYear} - Genap",
-            ];
-        }
-
-        return $options;
+        return TahunAkademik::orderBy('tahun', 'desc')
+            ->get()
+            ->map(fn ($ta) => [
+                'value' => $ta->tahun,
+                'label' => $ta->label,
+            ])
+            ->toArray();
     }
 }

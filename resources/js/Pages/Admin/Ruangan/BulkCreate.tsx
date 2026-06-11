@@ -20,6 +20,7 @@ interface ImportResults {
     validCount: number;
     errorCount: number;
     errors: ImportError[];
+    validIds: number[];
 }
 
 interface Props extends Record<string, unknown> {
@@ -175,6 +176,27 @@ export default function BulkCreate({ importResults }: PageProps<Props>) {
                                                             <div key={j}>{msg}</div>
                                                         ))}
                                                     </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            )}
+
+                            {importResults.validCount > 0 && (
+                                <div className="rounded-md border">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead className="w-16">ID</TableHead>
+                                                <TableHead>Keterangan</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {importResults.validIds.map((id, i) => (
+                                                <TableRow key={i}>
+                                                    <TableCell className="font-mono font-medium">{id}</TableCell>
+                                                    <TableCell className="text-muted-foreground text-xs">Gunakan ID ini sebagai referensi di Excel Sidang (kolom H)</TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody>

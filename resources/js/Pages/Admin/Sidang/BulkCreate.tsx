@@ -20,6 +20,9 @@ interface ImportError {
         inisial_pimpinan: string;
         tanggal_ujian: string;
         tahun_akademik: string;
+        ruangan_id: string;
+        jam_id: string;
+        pic_id: string;
     };
     messages: string[];
 }
@@ -88,6 +91,9 @@ export default function BulkCreate({ importResults }: PageProps<Props>) {
                                         <TableHead>Kolom E</TableHead>
                                         <TableHead>Kolom F</TableHead>
                                         <TableHead>Kolom G</TableHead>
+                                        <TableHead>Kolom H</TableHead>
+                                        <TableHead>Kolom I</TableHead>
+                                        <TableHead>Kolom J</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -99,6 +105,9 @@ export default function BulkCreate({ importResults }: PageProps<Props>) {
                                         <TableCell>Inisial Pimpinan Sidang</TableCell>
                                         <TableCell>Tanggal Ujian</TableCell>
                                         <TableCell>Tahun Akademik</TableCell>
+                                        <TableCell>Ruangan ID</TableCell>
+                                        <TableCell>Jam ID</TableCell>
+                                        <TableCell>PIC ID</TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell className="text-muted-foreground text-xs">NIM mahasiswa (wajib, harus terdaftar)</TableCell>
@@ -108,6 +117,9 @@ export default function BulkCreate({ importResults }: PageProps<Props>) {
                                         <TableCell className="text-muted-foreground text-xs">Inisial dosen (wajib, harus terdaftar)</TableCell>
                                         <TableCell className="text-muted-foreground text-xs">Format: YYYY-MM-DD (wajib)</TableCell>
                                         <TableCell className="text-muted-foreground text-xs">Contoh: 20251 (wajib)</TableCell>
+                                        <TableCell className="text-muted-foreground text-xs">ID ruangan (opsional, lihat Data Ruangan)</TableCell>
+                                        <TableCell className="text-muted-foreground text-xs">ID jam (opsional, lihat Data Jam)</TableCell>
+                                        <TableCell className="text-muted-foreground text-xs">ID PIC (opsional)</TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>
@@ -193,6 +205,9 @@ export default function BulkCreate({ importResults }: PageProps<Props>) {
                                                 <TableHead>Pimpinan</TableHead>
                                                 <TableHead>Tgl Ujian</TableHead>
                                                 <TableHead>TA</TableHead>
+                                                <TableHead>Ruangan</TableHead>
+                                                <TableHead>Jam</TableHead>
+                                                <TableHead>PIC</TableHead>
                                                 <TableHead>Error</TableHead>
                                             </TableRow>
                                         </TableHeader>
@@ -206,6 +221,9 @@ export default function BulkCreate({ importResults }: PageProps<Props>) {
                                                     <TableCell className="text-xs">{err.data.inisial_pimpinan || '-'}</TableCell>
                                                     <TableCell className="text-xs">{err.data.tanggal_ujian || '-'}</TableCell>
                                                     <TableCell className="text-xs">{err.data.tahun_akademik || '-'}</TableCell>
+                                                    <TableCell className="text-xs">{err.data.ruangan_id || '-'}</TableCell>
+                                                    <TableCell className="text-xs">{err.data.jam_id || '-'}</TableCell>
+                                                    <TableCell className="text-xs">{err.data.pic_id || '-'}</TableCell>
                                                     <TableCell className="text-destructive text-xs">
                                                         {err.messages.map((msg, j) => (
                                                             <div key={j}>{msg}</div>

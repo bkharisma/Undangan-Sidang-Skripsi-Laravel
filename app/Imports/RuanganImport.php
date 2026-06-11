@@ -9,6 +9,7 @@ class RuanganImport
 {
     private array $errors = [];
     private int $validCount = 0;
+    private array $validIds = [];
 
     public function __construct(private readonly string $filePath) {}
 
@@ -45,7 +46,8 @@ class RuanganImport
                     'messages' => $validator->errors()->all(),
                 ];
             } else {
-                Ruangan::create($validator->validated());
+                $ruangan = Ruangan::create($validator->validated());
+                $this->validIds[] = $ruangan->id;
                 $this->validCount++;
             }
         }
@@ -64,5 +66,10 @@ class RuanganImport
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    public function getValidIds(): array
+    {
+        return $this->validIds;
     }
 }

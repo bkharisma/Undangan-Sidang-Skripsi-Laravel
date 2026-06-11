@@ -18,7 +18,6 @@ class UpdateSettingRequest extends FormRequest
             'app_name' => ['nullable', 'string', 'max:100'],
             'app_deskripsi' => ['nullable', 'string'],
             'favicon' => ['nullable', 'image', 'mimes:jpeg,png,ico,svg', 'max:512'],
-            'tahun_ajaran_aktif' => ['nullable', 'string', 'size:5'],
         ];
     }
 
@@ -29,7 +28,6 @@ class UpdateSettingRequest extends FormRequest
             'app_logo.max' => 'Ukuran logo maksimal 2MB.',
             'favicon.image' => 'Favicon harus berupa gambar.',
             'favicon.max' => 'Ukuran favicon maksimal 512KB.',
-            'tahun_ajaran_aktif.size' => 'Tahun ajaran harus 5 karakter (contoh: 20252).',
         ];
     }
 }

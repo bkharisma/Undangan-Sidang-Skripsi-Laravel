@@ -54,6 +54,7 @@ export default function Index({ jam }: PageProps<Props>) {
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead className="w-16">ID</TableHead>
                                 <TableHead>Jam Mulai</TableHead>
                                 <TableHead>Jam Selesai</TableHead>
                                 <TableHead>Range</TableHead>
@@ -70,6 +71,7 @@ export default function Index({ jam }: PageProps<Props>) {
                             ) : (
                                 jam.data.map((j) => (
                                     <TableRow key={j.id}>
+                                        <TableCell className="text-muted-foreground text-xs">{j.id}</TableCell>
                                         <TableCell className="font-medium">{j.jam_mulai}</TableCell>
                                         <TableCell>{j.jam_selesai}</TableCell>
                                         <TableCell>{j.jam_mulai} - {j.jam_selesai}</TableCell>

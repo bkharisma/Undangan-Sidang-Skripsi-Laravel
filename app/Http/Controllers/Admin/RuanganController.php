@@ -104,6 +104,7 @@ class RuanganController extends Controller
                 'validCount' => $import->getValidCount(),
                 'errorCount' => $import->getErrorCount(),
                 'errors' => $import->getErrors(),
+                'validIds' => $import->getValidIds(),
             ],
         ]);
     }

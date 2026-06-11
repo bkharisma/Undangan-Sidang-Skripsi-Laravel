@@ -52,16 +52,22 @@ const adminNavItems: NavItem[] = [
         pattern: 'admin.users*',
     },
     {
-        label: 'Data Dosen',
-        href: '/admin/dosen',
-        icon: GraduationCap,
-        pattern: 'admin.dosen*',
+        label: 'Tahun Akademik',
+        href: '/admin/tahun-akademik',
+        icon: Calendar,
+        pattern: 'admin.tahun-akademik*',
     },
     {
         label: 'Program Studi',
         href: '/admin/program-studi',
         icon: Library,
         pattern: 'admin.program-studi*',
+    },
+    {
+        label: 'Data Dosen',
+        href: '/admin/dosen',
+        icon: GraduationCap,
+        pattern: 'admin.dosen*',
     },
     {
         label: 'Data Mahasiswa',
