@@ -97,7 +97,7 @@ export default function SidangIndex({ sidang, filters, tahunAkademikOptions, pro
             <Head title="Data Sidang" />
 
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <h1 className="text-2xl font-bold">Data Sidang</h1>
                     <Button onClick={() => router.visit('/sidang/create')}>
                         <Plus className="mr-2 h-4 w-4" />
@@ -105,18 +105,18 @@ export default function SidangIndex({ sidang, filters, tahunAkademikOptions, pro
                     </Button>
                 </div>
 
-                <form onSubmit={handleSearch} className="flex flex-wrap gap-2">
+                <form onSubmit={handleSearch} className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                     <Input
                         placeholder="Cari NIM, nama, atau judul skripsi..."
                         value={data.search}
                         onChange={(e) => setData('search', e.target.value)}
-                        className="max-w-sm"
+                        className="w-full sm:max-w-sm"
                     />
                     <Select
                         value={filters.tahun_akademik || ''}
                         onValueChange={handleTaFilter}
                     >
-                        <SelectTrigger className="w-[240px]">
+                        <SelectTrigger className="w-full sm:w-[240px]">
                             <SelectValue placeholder="Semua Tahun Akademik" />
                         </SelectTrigger>
                         <SelectContent>
@@ -132,7 +132,7 @@ export default function SidangIndex({ sidang, filters, tahunAkademikOptions, pro
                         value={filters.prodi || ''}
                         onValueChange={handleProdiFilter}
                     >
-                        <SelectTrigger className="w-[200px]">
+                        <SelectTrigger className="w-full sm:w-[200px]">
                             <SelectValue placeholder="Semua Prodi" />
                         </SelectTrigger>
                         <SelectContent>
@@ -172,8 +172,8 @@ export default function SidangIndex({ sidang, filters, tahunAkademikOptions, pro
                     <span>data</span>
                 </div>
 
-                <div className="rounded-lg border">
-                    <Table>
+                <div className="rounded-lg border overflow-hidden">
+                    <Table className="min-w-[750px]">
                         <TableHeader>
                             <TableRow>
                                 <TableHead
@@ -292,11 +292,11 @@ export default function SidangIndex({ sidang, filters, tahunAkademikOptions, pro
                 </div>
 
                 {sidang.last_page > 1 && (
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <p className="text-sm text-muted-foreground">
                             Menampilkan {sidang.from} sampai {sidang.to} dari {sidang.total} data
                         </p>
-                        <div className="flex gap-1">
+                        <div className="flex flex-wrap gap-1">
                             {sidang.links.map((link, i) => {
                                 if (link.url === null) {
                                     return (

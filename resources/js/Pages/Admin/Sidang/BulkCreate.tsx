@@ -61,8 +61,8 @@ export default function BulkCreate({ importResults }: PageProps<Props>) {
         <AppLayout>
             <Head title="Tambah Sidang (Bulk)" />
 
-            <div className="space-y-6 max-w-3xl">
-                <div className="flex items-center gap-3">
+            <div className="space-y-6 w-full max-w-3xl">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                     <Button variant="outline" size="icon" onClick={() => router.visit(route('admin.sidang.index'))}>
                         <ArrowLeft className="h-4 w-4" />
                     </Button>

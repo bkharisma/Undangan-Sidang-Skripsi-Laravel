@@ -198,11 +198,11 @@ export default function SidangShow({ sidang, pic, ruangan, jam }: Props) {
             <Head title="Detail Sidang" />
 
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <h1 className="text-2xl font-bold">Detail Sidang</h1>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                         <Link href={route('sidang.edit', sidang.id)}>
-                            <Button variant="outline">
+                            <Button variant="outline" size="sm">
                                 <Pencil className="mr-2 h-4 w-4" />
                                 Edit Sidang
                             </Button>
@@ -215,7 +215,7 @@ export default function SidangShow({ sidang, pic, ruangan, jam }: Props) {
                                 if (!confirm('Hapus sidang ini?')) e.preventDefault();
                             }}
                         >
-                            <Button variant="destructive">
+                            <Button variant="destructive" size="sm">
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Hapus
                             </Button>

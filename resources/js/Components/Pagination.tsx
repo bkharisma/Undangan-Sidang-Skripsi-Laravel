@@ -23,7 +23,7 @@ export default function Pagination({ links, from, to, total }: PaginationProps) 
             <p className="text-sm text-muted-foreground">
                 Menampilkan {from}–{to} dari {total} data
             </p>
-            <div className="flex items-center gap-1">
+            <div className="flex flex-wrap items-center gap-1">
                 {links.map((link, i) => {
                     if (link.label.includes('Previous')) {
                         return (
@@ -57,6 +57,7 @@ export default function Pagination({ links, from, to, total }: PaginationProps) 
                             variant={link.active ? 'default' : 'outline'}
                             size="sm"
                             disabled={!link.url}
+                            className="hidden sm:inline-flex"
                             onClick={() => link.url && router.visit(link.url)}
                         >
                             {link.label.replace(/&laquo;|&raquo;/g, '')}

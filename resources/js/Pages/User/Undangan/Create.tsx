@@ -153,7 +153,7 @@ export default function UndanganCreate({ dosenList, nomorSuratSuggestion }: Prop
                                 </p>
                             ) : (
                                 <div className="overflow-x-auto rounded-md border">
-                                    <table className="w-full text-sm">
+                                    <table className="w-full text-sm min-w-[800px]">
                                         <thead>
                                             <tr className="border-b bg-muted/50">
                                                 <th className="px-3 py-2 text-left font-medium">No</th>

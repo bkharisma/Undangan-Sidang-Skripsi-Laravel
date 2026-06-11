@@ -106,15 +106,15 @@ export default function Index({ sidang, filters, tahunAkademikOptions, prodiOpti
             <Head title="Semua Sidang" />
 
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <h1 className="text-2xl font-bold">Semua Sidang</h1>
                     <Button onClick={() => router.visit(route('admin.sidang.bulk.create'))}>
                         <Upload className="mr-2 h-4 w-4" /> Tambah Bulk
                     </Button>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
-                    <div className="relative flex-1 max-w-sm">
+                <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+                    <div className="relative w-full sm:flex-1 sm:max-w-sm">
                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             placeholder="Cari mahasiswa, NIM, atau judul..."
@@ -140,7 +140,7 @@ export default function Index({ sidang, filters, tahunAkademikOptions, prodiOpti
                             );
                         }}
                     >
-                        <SelectTrigger className="w-[240px]">
+                        <SelectTrigger className="w-full sm:w-[240px]">
                             <SelectValue placeholder="Semua Tahun Akademik" />
                         </SelectTrigger>
                         <SelectContent>
@@ -162,7 +162,7 @@ export default function Index({ sidang, filters, tahunAkademikOptions, prodiOpti
                             );
                         }}
                     >
-                        <SelectTrigger className="w-[200px]">
+                        <SelectTrigger className="w-full sm:w-[200px]">
                             <SelectValue placeholder="Semua Prodi" />
                         </SelectTrigger>
                         <SelectContent>
@@ -202,8 +202,8 @@ export default function Index({ sidang, filters, tahunAkademikOptions, prodiOpti
                     <span>data</span>
                 </div>
 
-                <div className="rounded-lg border">
-                    <Table>
+                <div className="rounded-lg border overflow-hidden">
+                    <Table className="min-w-[800px]">
                         <TableHeader>
                             <TableRow>
                                 <TableHead

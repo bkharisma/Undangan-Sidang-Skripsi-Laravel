@@ -77,7 +77,7 @@ export default function UndanganShow({ undangan, sidangList }: Props) {
             <Head title="Detail Undangan" />
 
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
                         <Link href={route('undangan.index')}>
                             <Button variant="ghost" size="icon">
@@ -86,23 +86,23 @@ export default function UndanganShow({ undangan, sidangList }: Props) {
                         </Link>
                         <h1 className="text-2xl font-bold">Detail Undangan #{undangan.id}</h1>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                         <a href={route('undangan.preview', undangan.id)} target="_blank" rel="noreferrer">
-                            <Button variant="outline">
+                            <Button variant="outline" size="sm">
                                 <Eye className="mr-2 h-4 w-4" />
-                                Preview
+                                <span className="hidden sm:inline">Preview</span>
                             </Button>
                         </a>
                         <a href={route('undangan.download', undangan.id)}>
-                            <Button variant="outline">
+                            <Button variant="outline" size="sm">
                                 <Download className="mr-2 h-4 w-4" />
-                                Download PDF
+                                <span className="hidden sm:inline">Download PDF</span>
                             </Button>
                         </a>
                         <Link href={route('undangan.edit', undangan.id)}>
-                            <Button variant="outline">
+                            <Button variant="outline" size="sm">
                                 <Pencil className="mr-2 h-4 w-4" />
-                                Edit
+                                <span className="hidden sm:inline">Edit</span>
                             </Button>
                         </Link>
                         <Link
@@ -113,9 +113,9 @@ export default function UndanganShow({ undangan, sidangList }: Props) {
                                 if (!confirm('Hapus undangan ini?')) e.preventDefault();
                             }}
                         >
-                            <Button variant="destructive">
+                            <Button variant="destructive" size="sm">
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                Hapus
+                                <span className="hidden sm:inline">Hapus</span>
                             </Button>
                         </Link>
                     </div>
@@ -151,7 +151,7 @@ export default function UndanganShow({ undangan, sidangList }: Props) {
                             <p className="text-muted-foreground">Tidak ada jadwal sidang yang melibatkan dosen ini.</p>
                         ) : (
                             <div className="overflow-x-auto rounded-md border">
-                                <table className="w-full text-sm">
+                                <table className="w-full text-sm min-w-[800px]">
                                     <thead>
                                         <tr className="border-b bg-muted/50">
                                             <th className="px-3 py-2 text-left font-medium">No</th>

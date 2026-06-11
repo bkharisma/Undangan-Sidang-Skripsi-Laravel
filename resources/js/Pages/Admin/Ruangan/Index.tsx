@@ -40,9 +40,9 @@ export default function Index({ ruangan, filters }: PageProps<Props>) {
             <Head title="Data Ruangan" />
 
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <h1 className="text-2xl font-bold">Data Ruangan</h1>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                         <Button variant="outline" onClick={() => router.visit(route('admin.ruangan.bulk.create'))}>
                             <FileUp className="mr-2 h-4 w-4" /> Tambah Banyak
                         </Button>
@@ -53,7 +53,7 @@ export default function Index({ ruangan, filters }: PageProps<Props>) {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <div className="relative flex-1 max-w-sm">
+                    <div className="relative w-full max-w-sm">
                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             placeholder="Cari nama ruangan..."

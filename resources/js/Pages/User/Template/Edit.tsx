@@ -47,10 +47,10 @@ export default function TemplateEdit({ template }: Props) {
             <Head title="Edit Template PDF" />
 
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold">Edit Template PDF</h1>
-                        <p className="text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                             Atur header, logo, tanda tangan, dan deskripsi yang akan tampil di semua undangan PDF.
                         </p>
                     </div>
