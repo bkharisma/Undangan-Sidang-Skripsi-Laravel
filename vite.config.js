@@ -18,4 +18,34 @@ export default defineConfig({
             '@': path.resolve(__dirname, './resources/js'),
         },
     },
+    build: {
+        modulePreload: false,
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        if (id.includes('react-dom') || id.includes('/react/') || id.includes('react/jsx-runtime')) {
+                            return 'vendor-react';
+                        }
+                        if (id.includes('@inertiajs')) {
+                            return 'vendor-inertia';
+                        }
+                        if (
+                            id.includes('@base-ui') ||
+                            id.includes('class-variance-authority') ||
+                            id.includes('clsx') ||
+                            id.includes('tailwind-merge') ||
+                            id.includes('sonner')
+                        ) {
+                            return 'vendor-ui';
+                        }
+                        if (id.includes('lucide-react')) {
+                            return 'vendor-lucide';
+                        }
+                        return 'vendor-misc';
+                    }
+                },
+            },
+        },
+    },
 });
