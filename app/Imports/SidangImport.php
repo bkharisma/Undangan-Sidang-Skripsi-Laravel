@@ -20,7 +20,7 @@ class SidangImport
 
     public function process(): void
     {
-        ini_set('memory_limit', '256M');
+        ini_set('memory_limit', '512M');
 
         $reader = IOFactory::createReaderForFile($this->filePath);
         $reader->setReadDataOnly(true);
