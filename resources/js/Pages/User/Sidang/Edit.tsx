@@ -106,7 +106,7 @@ export default function SidangEdit({ sidang, mahasiswa, dosen, pic, ruangan, jam
             <div className="space-y-6">
                 <h1 className="text-2xl font-bold">Edit Data Sidang</h1>
 
-                <form onSubmit={submit} className="max-w-2xl space-y-6">
+                <form onSubmit={submit} className="w-full space-y-6">
                     <div className="space-y-2">
                         <Label htmlFor="mahasiswa">Mahasiswa *</Label>
                         <Select

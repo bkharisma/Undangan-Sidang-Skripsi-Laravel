@@ -54,7 +54,7 @@ export default function BulkCreate({ importResults }: PageProps<Props>) {
         <AppLayout>
             <Head title="Tambah Ruangan (Bulk)" />
 
-            <div className="space-y-6 max-w-2xl">
+            <div className="space-y-6 w-full">
                 <div className="flex items-center gap-3">
                     <Button variant="outline" size="icon" onClick={() => router.visit(route('admin.ruangan.index'))}>
                         <ArrowLeft className="h-4 w-4" />

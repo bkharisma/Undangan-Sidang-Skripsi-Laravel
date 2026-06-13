@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import { Tabs, TabList, Tab, TabPanel } from '@/components/ui/tabs';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useEffect, useMemo } from 'react';
 import { Save, Eye } from 'lucide-react';
@@ -96,176 +96,173 @@ export default function TemplateEdit({ template }: Props) {
                     </a>
                 </div>
 
-                <form onSubmit={submit} className="max-w-2xl">
+                <form onSubmit={submit} className="w-full">
                     <Card>
                         <CardContent>
-                            <Accordion multiple defaultValue={['header', 'ttd', 'deskripsi']}>
-                                <AccordionItem value="header">
-                                    <AccordionTrigger>Header</AccordionTrigger>
-                                    <AccordionContent>
-                                        <div className="space-y-4">
-                                            <div className="space-y-2">
-                                                <Label htmlFor="header_image">
-                                                    Header Image (Kop Surat Full)
-                                                </Label>
-                                                <p className="text-xs text-muted-foreground">
-                                                    Upload gambar kop surat full-width. Jika diisi, akan menggantikan header teks dan logo.
-                                                </p>
-                                                {(headerImagePreview || template.header_image_url) && (
-                                                    <div className="rounded border p-2">
-                                                        <img
-                                                            src={headerImagePreview ?? template.header_image_url ?? ''}
-                                                            alt="Preview header image"
-                                                            className="max-h-24 w-full object-contain"
-                                                        />
-                                                    </div>
-                                                )}
-                                                <Input
-                                                    id="header_image"
-                                                    type="file"
-                                                    accept="image/*"
-                                                    onChange={(e) => {
-                                                        if (e.target.files?.[0]) {
-                                                            setData('header_image', e.target.files[0]);
-                                                        }
-                                                    }}
-                                                />
-                                                {errors.header_image && (
-                                                    <p className="text-sm text-destructive">{errors.header_image}</p>
-                                                )}
-                                            </div>
+                            <Tabs defaultValue="header">
+                                <TabList>
+                                    <Tab value="header">Header</Tab>
+                                    <Tab value="ttd">Tanda Tangan</Tab>
+                                    <Tab value="deskripsi">Deskripsi</Tab>
+                                </TabList>
 
-                                            <div className="space-y-2">
-                                                <Label htmlFor="header_logo">
-                                                    Header Logo
-                                                </Label>
-                                                <p className="text-xs text-muted-foreground">
-                                                    Hanya dipakai jika Header Image tidak diisi.
-                                                </p>
-                                                {(headerLogoPreview || template.header_logo_url) && (
-                                                    <div className="rounded border p-2 inline-block">
-                                                        <img
-                                                            src={headerLogoPreview ?? template.header_logo_url ?? ''}
-                                                            alt="Preview header logo"
-                                                            className="h-12 w-auto object-contain"
-                                                        />
-                                                    </div>
-                                                )}
-                                                <Input
-                                                    id="header_logo"
-                                                    type="file"
-                                                    accept="image/*"
-                                                    onChange={(e) => {
-                                                        if (e.target.files?.[0]) {
-                                                            setData('header_logo', e.target.files[0]);
-                                                        }
-                                                    }}
-                                                />
-                                                {errors.header_logo && (
-                                                    <p className="text-sm text-destructive">{errors.header_logo}</p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </AccordionContent>
-                                </AccordionItem>
-
-                                <AccordionItem value="ttd">
-                                    <AccordionTrigger>Tanda Tangan</AccordionTrigger>
-                                    <AccordionContent>
-                                        <div className="space-y-4">
-                                            <div className="space-y-2">
-                                                <Label htmlFor="ttd_image">
-                                                    Gambar TTD
-                                                </Label>
-                                                <p className="text-xs text-muted-foreground">
-                                                    Upload gambar tanda tangan (format PNG transparan disarankan).
-                                                </p>
-                                                {(ttdImagePreview || template.ttd_image_url) && (
-                                                    <div className="rounded border p-2 inline-block">
-                                                        <img
-                                                            src={ttdImagePreview ?? template.ttd_image_url ?? ''}
-                                                            alt="Preview TTD"
-                                                            className="h-16 w-auto object-contain"
-                                                        />
-                                                    </div>
-                                                )}
-                                                <Input
-                                                    id="ttd_image"
-                                                    type="file"
-                                                    accept="image/*"
-                                                    onChange={(e) => {
-                                                        if (e.target.files?.[0]) {
-                                                            setData('ttd_image', e.target.files[0]);
-                                                        }
-                                                    }}
-                                                />
-                                                {errors.ttd_image && (
-                                                    <p className="text-sm text-destructive">{errors.ttd_image}</p>
-                                                )}
-                                            </div>
-
-                                            <div className="space-y-2">
-                                                <Label htmlFor="ttd_kota">Kota</Label>
-                                                <Input
-                                                    id="ttd_kota"
-                                                    value={data.ttd_kota}
-                                                    onChange={(e) => setData('ttd_kota', e.target.value)}
-                                                    placeholder="Contoh: Jakarta..."
-                                                />
-                                            </div>
-
-                                            <div className="space-y-2">
-                                                <Label htmlFor="ttd_jabatan">Jabatan</Label>
-                                                <Input
-                                                    id="ttd_jabatan"
-                                                    value={data.ttd_jabatan}
-                                                    onChange={(e) => setData('ttd_jabatan', e.target.value)}
-                                                    placeholder="Contoh: Ketua Program Studi..."
-                                                />
-                                            </div>
-
-                                            <div className="space-y-2">
-                                                <Label htmlFor="ttd_nama">Nama Penanda Tangan</Label>
-                                                <Input
-                                                    id="ttd_nama"
-                                                    value={data.ttd_nama}
-                                                    onChange={(e) => setData('ttd_nama', e.target.value)}
-                                                    placeholder="Nama pejabat penanda tangan..."
-                                                />
-                                            </div>
-
-                                            <div className="space-y-2">
-                                                <Label htmlFor="ttd_nip">NIP</Label>
-                                                <Input
-                                                    id="ttd_nip"
-                                                    value={data.ttd_nip}
-                                                    onChange={(e) => setData('ttd_nip', e.target.value)}
-                                                    placeholder="NIP pejabat penanda tangan..."
-                                                />
-                                            </div>
-                                        </div>
-                                    </AccordionContent>
-                                </AccordionItem>
-
-                                <AccordionItem value="deskripsi">
-                                    <AccordionTrigger>Deskripsi</AccordionTrigger>
-                                    <AccordionContent>
+                                <TabPanel value="header">
+                                    <div className="space-y-4">
                                         <div className="space-y-2">
-                                            <Label htmlFor="deskripsi">Deskripsi Undangan</Label>
-                                            <Textarea
-                                                id="deskripsi"
-                                                value={data.deskripsi}
-                                                onChange={(e) => setData('deskripsi', e.target.value)}
-                                                placeholder="Tulis deskripsi atau pesan untuk semua undangan..."
-                                                rows={4}
+                                            <Label htmlFor="header_image">
+                                                Header Image (Kop Surat Full)
+                                            </Label>
+                                            <p className="text-xs text-muted-foreground">
+                                                Upload gambar kop surat full-width. Jika diisi, akan menggantikan header teks dan logo.
+                                            </p>
+                                            {(headerImagePreview || template.header_image_url) && (
+                                                <div className="rounded border p-2">
+                                                    <img
+                                                        src={headerImagePreview ?? template.header_image_url ?? ''}
+                                                        alt="Preview header image"
+                                                        className="max-h-24 w-full object-contain"
+                                                    />
+                                                </div>
+                                            )}
+                                            <Input
+                                                id="header_image"
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => {
+                                                    if (e.target.files?.[0]) {
+                                                        setData('header_image', e.target.files[0]);
+                                                    }
+                                                }}
                                             />
-                                            {errors.deskripsi && (
-                                                <p className="text-sm text-destructive">{errors.deskripsi}</p>
+                                            {errors.header_image && (
+                                                <p className="text-sm text-destructive">{errors.header_image}</p>
                                             )}
                                         </div>
-                                    </AccordionContent>
-                                </AccordionItem>
-                            </Accordion>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="header_logo">
+                                                Header Logo
+                                            </Label>
+                                            <p className="text-xs text-muted-foreground">
+                                                Hanya dipakai jika Header Image tidak diisi.
+                                            </p>
+                                            {(headerLogoPreview || template.header_logo_url) && (
+                                                <div className="rounded border p-2 inline-block">
+                                                    <img
+                                                        src={headerLogoPreview ?? template.header_logo_url ?? ''}
+                                                        alt="Preview header logo"
+                                                        className="h-12 w-auto object-contain"
+                                                    />
+                                                </div>
+                                            )}
+                                            <Input
+                                                id="header_logo"
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => {
+                                                    if (e.target.files?.[0]) {
+                                                        setData('header_logo', e.target.files[0]);
+                                                    }
+                                                }}
+                                            />
+                                            {errors.header_logo && (
+                                                <p className="text-sm text-destructive">{errors.header_logo}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </TabPanel>
+
+                                <TabPanel value="ttd">
+                                    <div className="space-y-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="ttd_image">
+                                                Gambar TTD
+                                            </Label>
+                                            <p className="text-xs text-muted-foreground">
+                                                Upload gambar tanda tangan (format PNG transparan disarankan).
+                                            </p>
+                                            {(ttdImagePreview || template.ttd_image_url) && (
+                                                <div className="rounded border p-2 inline-block">
+                                                    <img
+                                                        src={ttdImagePreview ?? template.ttd_image_url ?? ''}
+                                                        alt="Preview TTD"
+                                                        className="h-16 w-auto object-contain"
+                                                    />
+                                                </div>
+                                            )}
+                                            <Input
+                                                id="ttd_image"
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => {
+                                                    if (e.target.files?.[0]) {
+                                                        setData('ttd_image', e.target.files[0]);
+                                                    }
+                                                }}
+                                            />
+                                            {errors.ttd_image && (
+                                                <p className="text-sm text-destructive">{errors.ttd_image}</p>
+                                            )}
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="ttd_kota">Kota</Label>
+                                            <Input
+                                                id="ttd_kota"
+                                                value={data.ttd_kota}
+                                                onChange={(e) => setData('ttd_kota', e.target.value)}
+                                                placeholder="Contoh: Jakarta..."
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="ttd_jabatan">Jabatan</Label>
+                                            <Input
+                                                id="ttd_jabatan"
+                                                value={data.ttd_jabatan}
+                                                onChange={(e) => setData('ttd_jabatan', e.target.value)}
+                                                placeholder="Contoh: Ketua Program Studi..."
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="ttd_nama">Nama Penanda Tangan</Label>
+                                            <Input
+                                                id="ttd_nama"
+                                                value={data.ttd_nama}
+                                                onChange={(e) => setData('ttd_nama', e.target.value)}
+                                                placeholder="Nama pejabat penanda tangan..."
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="ttd_nip">NIP</Label>
+                                            <Input
+                                                id="ttd_nip"
+                                                value={data.ttd_nip}
+                                                onChange={(e) => setData('ttd_nip', e.target.value)}
+                                                placeholder="NIP pejabat penanda tangan..."
+                                            />
+                                        </div>
+                                    </div>
+                                </TabPanel>
+
+                                <TabPanel value="deskripsi">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="deskripsi">Deskripsi Undangan</Label>
+                                        <Textarea
+                                            id="deskripsi"
+                                            value={data.deskripsi}
+                                            onChange={(e) => setData('deskripsi', e.target.value)}
+                                            placeholder="Tulis deskripsi atau pesan untuk semua undangan..."
+                                            rows={4}
+                                        />
+                                        {errors.deskripsi && (
+                                            <p className="text-sm text-destructive">{errors.deskripsi}</p>
+                                        )}
+                                    </div>
+                                </TabPanel>
+                            </Tabs>
                         </CardContent>
                     </Card>
 

@@ -91,7 +91,7 @@ export default function UndanganCreate({ dosenList, nomorSuratSuggestion }: Prop
                 <h1 className="text-2xl font-bold">Buat Undangan Sidang</h1>
 
                 <form onSubmit={submit} className="space-y-6">
-                    <div className="max-w-2xl space-y-4">
+                    <div className="w-full space-y-4">
                         <div className="space-y-2">
                             <Label>Pilih Dosen *</Label>
                             <Select

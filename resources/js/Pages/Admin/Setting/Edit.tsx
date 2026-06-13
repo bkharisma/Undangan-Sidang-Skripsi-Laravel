@@ -68,7 +68,7 @@ export default function SettingEdit({ setting }: Props) {
                     </p>
                 </div>
 
-                <Card className="max-w-2xl">
+                <Card className="w-full">
                     <CardHeader>
                         <CardTitle>Identitas Aplikasi</CardTitle>
                     </CardHeader>

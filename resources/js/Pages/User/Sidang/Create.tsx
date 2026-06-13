@@ -84,7 +84,7 @@ export default function SidangCreate({ mahasiswa, dosen, pic, ruangan, jam, tahu
             <div className="space-y-6">
                 <h1 className="text-2xl font-bold">Tambah Data Sidang</h1>
 
-                <form onSubmit={submit} className="max-w-2xl space-y-6">
+                <form onSubmit={submit} className="w-full space-y-6">
                     <div className="space-y-2">
                         <Label htmlFor="mahasiswa">Mahasiswa *</Label>
                         <Select
