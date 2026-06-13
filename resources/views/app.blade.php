@@ -8,10 +8,17 @@
             $setting = \App\Models\Setting::getAktif();
             $appName = $setting?->app_name ?: config('app.name', 'Laravel');
             $favicon = $setting?->favicon_url;
+            $faviconExt = $setting?->favicon ? pathinfo($setting->favicon, PATHINFO_EXTENSION) : null;
+            $faviconType = match ($faviconExt) {
+                'png' => 'image/png',
+                'gif' => 'image/gif',
+                'svg' => 'image/svg+xml',
+                default => 'image/x-icon',
+            };
         @endphp
 
         @if($favicon)
-            <link rel="icon" href="{{ $favicon }}" type="image/x-icon">
+            <link rel="icon" href="{{ $favicon }}" type="{{ $faviconType }}">
         @endif
 
         <title inertia>{{ $appName }}</title>

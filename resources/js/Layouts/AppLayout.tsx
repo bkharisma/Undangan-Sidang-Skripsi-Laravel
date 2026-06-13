@@ -258,7 +258,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
             {/* Main content */}
             <div className="flex flex-1 flex-col overflow-hidden">
                 {/* Navbar */}
-                <header className="flex h-16 items-center gap-4 border-b bg-card px-4 lg:px-6">
+                <header className="flex h-16 items-center gap-4 border-b bg-background px-4 lg:px-6">
                     <Button
                         variant="ghost"
                         size="icon"
@@ -293,7 +293,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
                 </header>
 
                 {/* Page content */}
-                <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+                <main className="flex-1 overflow-y-auto bg-card p-4 lg:p-6">
                     {children}
                 </main>
             </div>

@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Jam;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class JamImport
 {
@@ -15,7 +16,12 @@ class JamImport
 
     public function process(): void
     {
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($this->filePath);
+        ini_set('memory_limit', '256M');
+
+        $reader = IOFactory::createReaderForFile($this->filePath);
+        $reader->setReadDataOnly(true);
+        $spreadsheet = $reader->load($this->filePath);
+
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = $worksheet->toArray();
 
@@ -55,6 +61,9 @@ class JamImport
                 $this->validCount++;
             }
         }
+
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet, $worksheet, $rows);
     }
 
     public function getValidCount(): int

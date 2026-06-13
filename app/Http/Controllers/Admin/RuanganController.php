@@ -86,10 +86,12 @@ class RuanganController extends Controller
         $file = $request->file('file');
         $path = $file->storeAs('temp', uniqid('bulk_ruangan_') . '.' . $file->getClientOriginalExtension());
 
-        $import = new RuanganImport(storage_path('app/private/' . $path));
-        $import->process();
-
-        Storage::delete($path);
+        try {
+            $import = new RuanganImport(storage_path('app/private/' . $path));
+            $import->process();
+        } finally {
+            Storage::delete($path);
+        }
 
         $total = $import->getValidCount() + $import->getErrorCount();
 

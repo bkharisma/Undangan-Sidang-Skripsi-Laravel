@@ -322,6 +322,22 @@ class SidangController extends Controller
         return redirect()->route('sidang.show', $sidang)->with('success', 'Data sidang berhasil diperbarui.');
     }
 
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'ids' => ['required', 'array', 'min:1'],
+            'ids.*' => ['integer', 'exists:sidang,id'],
+        ]);
+
+        $deleted = Sidang::whereIn('id', $validated['ids'])
+            ->where('user_id', auth()->id())
+            ->delete();
+
+        return redirect()
+            ->route('sidang.index')
+            ->with('success', $deleted . ' data sidang berhasil dihapus.');
+    }
+
     public function destroy(Sidang $sidang): RedirectResponse
     {
         Gate::authorize('delete', $sidang);

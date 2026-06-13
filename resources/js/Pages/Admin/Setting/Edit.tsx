@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Head, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useEffect, useMemo } from 'react';
 import { Save } from 'lucide-react';
 
 interface SettingData {
@@ -29,6 +29,27 @@ export default function SettingEdit({ setting }: Props) {
         app_deskripsi: setting.app_deskripsi ?? '',
         favicon: null as File | null,
     });
+
+    const appLogoPreview = useMemo(
+        () => (data.app_logo ? URL.createObjectURL(data.app_logo) : null),
+        [data.app_logo],
+    );
+    const faviconPreview = useMemo(
+        () => (data.favicon ? URL.createObjectURL(data.favicon) : null),
+        [data.favicon],
+    );
+
+    useEffect(() => {
+        return () => {
+            if (appLogoPreview) URL.revokeObjectURL(appLogoPreview);
+        };
+    }, [appLogoPreview]);
+
+    useEffect(() => {
+        return () => {
+            if (faviconPreview) URL.revokeObjectURL(faviconPreview);
+        };
+    }, [faviconPreview]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -56,18 +77,15 @@ export default function SettingEdit({ setting }: Props) {
                             <div className="space-y-2">
                                 <Label htmlFor="app_logo">
                                     Logo Aplikasi
-                                    {setting.app_logo && (
-                                        <span className="text-xs text-muted-foreground"> (logo tersimpan)</span>
-                                    )}
                                 </Label>
                                 <p className="text-xs text-muted-foreground">
                                     Logo akan tampil di sidebar. Format PNG/JPG, maks 2MB.
                                 </p>
-                                {setting.app_logo_url && (
+                                {(appLogoPreview || setting.app_logo_url) && (
                                     <div className="rounded border p-2 inline-block">
                                         <img
-                                            src={setting.app_logo_url}
-                                            alt="Logo saat ini"
+                                            src={appLogoPreview ?? setting.app_logo_url ?? ''}
+                                            alt="Preview logo"
                                             className="h-12 w-auto object-contain"
                                         />
                                     </div>
@@ -117,18 +135,15 @@ export default function SettingEdit({ setting }: Props) {
                             <div className="space-y-2">
                                 <Label htmlFor="favicon">
                                     Favicon
-                                    {setting.favicon && (
-                                        <span className="text-xs text-muted-foreground"> (favicon tersimpan)</span>
-                                    )}
                                 </Label>
                                 <p className="text-xs text-muted-foreground">
                                     Icon kecil di tab browser. Format PNG/ICO, maks 512KB.
                                 </p>
-                                {setting.favicon_url && (
+                                {(faviconPreview || setting.favicon_url) && (
                                     <div className="rounded border p-1 inline-block">
                                         <img
-                                            src={setting.favicon_url}
-                                            alt="Favicon saat ini"
+                                            src={faviconPreview ?? setting.favicon_url ?? ''}
+                                            alt="Preview favicon"
                                             className="h-8 w-8 object-contain"
                                         />
                                     </div>

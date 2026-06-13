@@ -1,11 +1,18 @@
-import { Link, useForm } from '@inertiajs/react';
-import { Loader2 } from 'lucide-react';
+import { Link, useForm, usePage } from '@inertiajs/react';
+import { Loader2, FileText } from 'lucide-react';
 import { FormEventHandler } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
+interface SettingProp {
+    app_logo_url: string | null;
+    app_name: string | null;
+}
+
 export default function Login() {
+    const { setting } = usePage().props as { setting: SettingProp | null };
+    const appName = setting?.app_name || 'Undangan Sidang';
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -23,7 +30,12 @@ export default function Login() {
         <div className="flex min-h-screen items-center justify-center bg-background p-4">
             <div className="w-full max-w-md space-y-6">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold">Undangan Sidang</h1>
+                    {setting?.app_logo_url ? (
+                        <img src={setting.app_logo_url} alt={appName} className="mx-auto h-24 w-24 object-contain" />
+                    ) : (
+                        <FileText className="mx-auto h-16 w-16 text-primary" />
+                    )}
+                    <h1 className="mt-4 text-2xl font-bold">{appName}</h1>
                     <p className="text-muted-foreground">Sign in to your account</p>
                 </div>
 

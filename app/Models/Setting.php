@@ -16,6 +16,11 @@ class Setting extends Model
         'favicon',
     ];
 
+    protected $appends = [
+        'app_logo_url',
+        'favicon_url',
+    ];
+
     private static ?self $cachedInstance = null;
 
     public static function getAktif(): ?self

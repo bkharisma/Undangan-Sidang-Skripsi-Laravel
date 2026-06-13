@@ -122,6 +122,20 @@ class SidangController extends Controller
         return redirect()->back()->with('success', 'Jadwal sidang berhasil diperbarui.');
     }
 
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'ids' => ['required', 'array', 'min:1'],
+            'ids.*' => ['integer', 'exists:sidang,id'],
+        ]);
+
+        Sidang::whereIn('id', $validated['ids'])->delete();
+
+        return redirect()
+            ->route('admin.sidang.index')
+            ->with('success', count($validated['ids']) . ' data sidang berhasil dihapus.');
+    }
+
     public function bulkCreate()
     {
         return inertia('Admin/Sidang/BulkCreate', [
@@ -138,10 +152,12 @@ class SidangController extends Controller
         $file = $request->file('file');
         $path = $file->storeAs('temp', uniqid('bulk_sidang_') . '.' . $file->getClientOriginalExtension());
 
-        $import = new SidangImport(storage_path('app/private/' . $path), auth()->id());
-        $import->process();
-
-        Storage::delete($path);
+        try {
+            $import = new SidangImport(storage_path('app/private/' . $path), auth()->id());
+            $import->process();
+        } finally {
+            Storage::delete($path);
+        }
 
         if ($import->getValidCount() > 0 && $import->getErrorCount() === 0) {
             return redirect()

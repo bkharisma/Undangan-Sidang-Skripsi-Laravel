@@ -87,10 +87,12 @@ class ProgramStudiController extends Controller
         $file = $request->file('file');
         $path = $file->storeAs('temp', uniqid('bulk_program_studi_') . '.' . $file->getClientOriginalExtension());
 
-        $import = new ProgramStudiImport(storage_path('app/private/' . $path));
-        $import->process();
-
-        Storage::delete($path);
+        try {
+            $import = new ProgramStudiImport(storage_path('app/private/' . $path));
+            $import->process();
+        } finally {
+            Storage::delete($path);
+        }
 
         if ($import->getValidCount() > 0 && $import->getErrorCount() === 0) {
             return redirect()

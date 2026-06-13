@@ -6,8 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { Plus, Search, Pencil, Eye, Trash2, CalendarCheck, CalendarX, ArrowUpDown, ArrowUp, ArrowDown, Download } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { cn } from '@/lib/utils';
+import Checkbox from '@/Components/Checkbox';
+import ConfirmDialog from '@/Components/ConfirmDialog';
 
 interface SidangItem {
     id: number;
@@ -41,6 +43,40 @@ interface Props {
 
 export default function SidangIndex({ sidang, filters, tahunAkademikOptions, prodiOptions }: Props) {
     const { data, setData, get } = useForm({ search: filters.search || '' });
+
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+    const [bulkProcessing, setBulkProcessing] = useState(false);
+
+    const currentPageIds = sidang.data.map((s) => s.id);
+    const allOnPageSelected = currentPageIds.length > 0 && currentPageIds.every((id) => selectedIds.includes(id));
+
+    const toggleSelect = (id: number) => {
+        setSelectedIds((prev) =>
+            prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+        );
+    };
+
+    const toggleSelectAll = () => {
+        setSelectedIds((prev) =>
+            allOnPageSelected
+                ? prev.filter((id) => !currentPageIds.includes(id))
+                : [...new Set([...prev, ...currentPageIds])]
+        );
+    };
+
+    const handleBulkDelete = () => {
+        setBulkProcessing(true);
+        router.delete(route('sidang.bulk.destroy'), {
+            data: { ids: selectedIds },
+            onSuccess: () => {
+                setBulkProcessing(false);
+                setBulkDeleteOpen(false);
+                setSelectedIds([]);
+            },
+            onFinish: () => setBulkProcessing(false),
+        });
+    };
 
     const buildQuery = (overrides: Record<string, string | undefined> = {}) => ({
         search: data.search || undefined,
@@ -100,6 +136,14 @@ export default function SidangIndex({ sidang, filters, tahunAkademikOptions, pro
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <h1 className="text-2xl font-bold">Data Sidang</h1>
                     <div className="flex gap-2">
+                        <Button
+                            variant="destructive"
+                            disabled={selectedIds.length === 0}
+                            onClick={() => setBulkDeleteOpen(true)}
+                        >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Hapus Terpilih{selectedIds.length > 0 && ` (${selectedIds.length})`}
+                        </Button>
                         <Button variant="outline" onClick={() => {
                             const params = new URLSearchParams();
                             if (filters.search) params.set('search', filters.search);
@@ -189,6 +233,13 @@ export default function SidangIndex({ sidang, filters, tahunAkademikOptions, pro
                     <Table className="min-w-[750px]">
                         <TableHeader>
                             <TableRow>
+                                <TableHead className="w-10">
+                                    <Checkbox
+                                        checked={allOnPageSelected}
+                                        onChange={toggleSelectAll}
+                                        aria-label="Pilih semua di halaman ini"
+                                    />
+                                </TableHead>
                                 <TableHead
                                     className="cursor-pointer select-none whitespace-nowrap"
                                     onClick={() => handleSort('nim')}
@@ -236,13 +287,20 @@ export default function SidangIndex({ sidang, filters, tahunAkademikOptions, pro
                         <TableBody>
                             {sidang.data.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">
+                                    <TableCell colSpan={8} className="py-10 text-center text-muted-foreground">
                                         Belum ada data sidang.
                                     </TableCell>
                                 </TableRow>
                             ) : (
                                 sidang.data.map((item) => (
                                     <TableRow key={item.id}>
+                                        <TableCell className="w-10">
+                                            <Checkbox
+                                                checked={selectedIds.includes(item.id)}
+                                                onChange={() => toggleSelect(item.id)}
+                                                aria-label={`Pilih sidang ${item.mahasiswa?.nim}`}
+                                            />
+                                        </TableCell>
                                         <TableCell className="font-medium">
                                             {item.mahasiswa?.nim}
                                         </TableCell>
@@ -340,6 +398,17 @@ export default function SidangIndex({ sidang, filters, tahunAkademikOptions, pro
                     </div>
                 )}
             </div>
+
+            <ConfirmDialog
+                open={bulkDeleteOpen}
+                onOpenChange={(open) => {
+                    if (!bulkProcessing) setBulkDeleteOpen(open);
+                }}
+                title="Hapus Data Terpilih"
+                description={`Anda yakin ingin menghapus ${selectedIds.length} data sidang terpilih? Semua data jadwal yang terkait juga akan dihapus. Tindakan ini tidak dapat dibatalkan.`}
+                onConfirm={handleBulkDelete}
+                processing={bulkProcessing}
+            />
         </AppLayout>
     );
 }

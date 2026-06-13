@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
 
+    Route::delete('/sidang/bulk', [UserSidangController::class, 'bulkDestroy'])
+        ->name('sidang.bulk.destroy');
     Route::resource('sidang', UserSidangController::class);
     Route::get('/sidang/export', [UserSidangController::class, 'export'])
         ->name('sidang.export');
@@ -136,6 +138,8 @@ Route::middleware(['auth', 'admin'])
             ->name('sidang.bulk.store');
         Route::get('/sidang/bulk/template', [AdminSidangController::class, 'downloadTemplate'])
             ->name('sidang.bulk.template');
+        Route::delete('/sidang/bulk', [AdminSidangController::class, 'bulkDestroy'])
+            ->name('sidang.bulk.destroy');
         Route::get('/sidang/{sidang}', [AdminSidangController::class, 'show'])
             ->name('sidang.show');
         Route::put('/sidang/{sidang}/jadwal', [AdminSidangController::class, 'updateJadwal'])

@@ -51,7 +51,7 @@
             text-align: right;
         }
         .signature img {
-            max-height: 50px;
+            max-height: 90px;
             margin-bottom: 4px;
         }
         .signature p {

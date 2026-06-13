@@ -91,10 +91,12 @@ class MahasiswaController extends Controller
         $file = $request->file('file');
         $path = $file->storeAs('temp', uniqid('bulk_mahasiswa_') . '.' . $file->getClientOriginalExtension());
 
-        $import = new MahasiswaImport(storage_path('app/private/' . $path));
-        $import->process();
-
-        Storage::delete($path);
+        try {
+            $import = new MahasiswaImport(storage_path('app/private/' . $path));
+            $import->process();
+        } finally {
+            Storage::delete($path);
+        }
 
         $total = $import->getValidCount() + $import->getErrorCount();
 

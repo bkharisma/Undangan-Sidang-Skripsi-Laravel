@@ -15,7 +15,12 @@ class PicImport
 
     public function process(): void
     {
-        $spreadsheet = IOFactory::load($this->filePath);
+        ini_set('memory_limit', '256M');
+
+        $reader = IOFactory::createReaderForFile($this->filePath);
+        $reader->setReadDataOnly(true);
+        $spreadsheet = $reader->load($this->filePath);
+
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = $worksheet->toArray();
 
@@ -50,6 +55,9 @@ class PicImport
                 $this->validCount++;
             }
         }
+
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet, $worksheet, $rows);
     }
 
     public function getValidCount(): int
